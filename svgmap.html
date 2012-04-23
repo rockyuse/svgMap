@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SVG 地图</title>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="raphael-min.js"></script>
+<script type="text/javascript" src="chinaMapConfig.js"></script>
+<script type="text/javascript" src="worldMapConfig.js"></script>
+<script type="text/javascript" src="jquery-svgmap.js"></script>
+
+<style type="text/css">
+/* base */
+html{background:#fff;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}body,ul,ol,dl,dd,h1,h2,h3,h4,h5,h6,p,form,fieldset,legend,input,textarea,select,button,th,td,div{margin:0; padding:0}button,input,select,textarea{font:12px/1.5 tahoma,Helvetica,arial,\5b8b\4f53}input,select,textarea{font-size:100%}table{border-collapse:collapse;border-spacing:0}th{text-align:inherit}fieldset,img{border:0}iframe{display:block}ol,ul,li{list-style:none}del{text-decoration:line-through}ins,a{text-decoration:none}a:focus{outline:none}h1,h2,h3,h4,h5,h6{font-size:100%}.clear{clear:both}.clearfix:after{content:".";display:block;height:0;font-size:0;clear:both;visibility:hidden}.clearfix{zoom:1}
+/* base */
+
+body{font:12px/1.5 "Lucida Grande","Lucida Sans Unicode", Tahoma, SimSun,Helvetica,sans-serif; color:#2E313A;}
+.wrap{ width:800px; margin:0 auto; background:url(bg.png); border-left:1px solid #DDD; border-right:1px solid #DDD;}
+a{color:#0e4279; -moz-transition:color 0.3s ease 0s;}
+a:hover{color:#5B636A;}
+h1{ padding:20px 0 0 20px; font-size:24px; line-height:50px;} 
+h2{ margin-top:30px; padding-left:10px; background-color: #ddd; font-size:14px; line-height:30px;}
+
+
+/* 提示自定义 */
+.stateTip{display:none; position:absolute; padding:8px; background:#fff; border:2px solid #2385B1; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; font-size:12px; font-family:Tahoma; color:#333;}
+</style>
+
+<script type="text/javascript">
+$(function(){
+	$('#ChinaMap').SVGMap({
+		mapName: 'china'
+	});
+
+	$('#ChinaMap1').SVGMap({
+		mapName: 'china',
+		mapWidth: 600,
+		mapHeight: 500
+	});
+
+
+	$('#ChinaMap2').SVGMap({
+		mapName: 'china',
+		stateData: {
+	                'heilongjiang': {'stateInitColor': 1, 'baifenbi': 0.236},
+	                'beijing': {'stateInitColor': 2},
+	                'shanghai': {'stateInitColor': 3},
+	                'tianjin': {'stateInitColor': 4},
+	                'sichuan': {'stateInitColor': 5},
+	                'shandong': {'stateInitColor': 6},
+	                'shanxi': {'stateInitColor': 3},
+	                'zhejiang': {'stateInitColor': 4},
+	                'jiangshu': {'stateInitColor': 2},
+	                'hunan': {'stateInitColor': 4},
+	                'guizou': {'stateInitColor': 5},
+	                'neimenggu': {'stateInitColor': 6},
+	                'henan': {'stateInitColor': 3},
+	                'gansu': {'stateInitColor': 4},
+	                'ningxia': {'stateInitColor': 2},
+	                'jilin': {'diabled': true}
+            	}
+	});
+
+
+	$('#ChinaMap3').SVGMap({
+		mapName: 'china',
+        stateDataType: 'xml'
+	});
+
+
+	$('#ChinaMap4').SVGMap({
+        stateTipHtml: function(stateData, obj){
+            return 'id:' + ((stateData)[obj.id] && (stateData)[obj.id].baifenbi || obj.id) + '<br/>name:' + obj.name;
+        }
+	});
+
+
+	$('#ChinaMap5').SVGMap({
+        hoverCallback: function(stateData, obj){
+            $('#HoverCallback').html('hover:'+obj.name);
+        }
+	});
+
+	$('#ChinaMap6').SVGMap({
+        clickCallback: function(stateData, obj){
+            $('#ClickCallback').html('点击了：'+obj.name);
+        }
+	});
+
+	// 外部控制地图
+	var mapObj = {};
+	$('#ChinaMap7').SVGMap({
+        external: mapObj
+	});
+	$('#ChangeMap').click(function(){
+		mapObj.shandong.attr({fill: '#111'});
+		mapObj.shandong.mouseout(function(){
+			this.animate({
+                fill: '#ddd'
+            }, 250);
+		});
+	});
+	$('#ChangeMap1').click(function(){
+		mapObj.sichuan.attr({fill: '#00f'});
+		mapObj.sichuan.mouseout(function(){
+			this.animate({
+                fill: '#f0f'
+            }, 250);
+		});
+	});
+
+	$('#ChinaMap8').SVGMap({
+        showTip: false
+	});
+
+
+
+	$('#WorldMap').SVGMap({
+		mapName: 'world',
+		mapWidth: 600,
+		mapHeight: 400
+	});
+});
+</script>
+</head>
+<body>
+	<div class="wrap">
+		<h1>SVG 地图（By Rocky）</h1>
+
+		<h2>中国地图--默认</h2>
+	    <div id="ChinaMap"></div>
+
+	    <h2>自定义宽高</h2>
+	    <div id="ChinaMap1"></div>
+
+	    <h2>自定义数据-json</h2>
+	    <div id="ChinaMap2"></div>
+
+	    <h2>自定义数据-xml</h2>
+	    <div id="ChinaMap3"></div>
+
+	    <h2>不显示提示</h2>
+	    <div id="ChinaMap8"></div>
+
+	    <h2>tip显示自定义</h2>
+	    <div id="ChinaMap4"></div>
+
+	    <h2>hover回调</h2>
+	    <div id="HoverCallback" style="font-size:14px; color:red"></div>
+	    <div id="ChinaMap5"></div>
+	    
+
+	    <h2>click回调</h2>
+	    <div id="ClickCallback" style="font-size:14px; color:red"></div>
+	    <div id="ChinaMap6"></div>
+	    
+
+	    <h2>外部事件改变地图内容</h2>
+	    <a id="ChangeMap" href="javascript:;" style="line-height:30px;">&nbsp;&nbsp;改变山东的颜色</a>
+	    <a id="ChangeMap1" href="javascript:;" style="line-height:30px;">&nbsp;&nbsp;改变四川的颜色</a>
+	    <div id="ChinaMap7"></div>
+	    
+
+	    <h2>世界地图</h2>
+	    <div id="WorldMap"></div>
+
+    </div>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20672858-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>
+</html>
