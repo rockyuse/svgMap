@@ -7,6 +7,7 @@
             stateColorList: ['003399', '0058B0', '0071E1', '1C8DFF', '51A8FF', '82C0FF', 'AAD5FF'],
             stateDataAttr: ['stateInitColor', 'stateHoverColor', 'stateSelectedColor', 'baifenbi'],
             stateDataType: 'json',
+            stateSettingsXmlPath: '',
             stateData: {},
             
             strokeWidth: 1,
@@ -37,7 +38,7 @@
         var stateData = {};
 
         if(opt.stateDataType == 'xml'){
-            var mapSettings = mapName + 'MapSettings.xml';
+            var mapSettings = opt.stateSettingsXmlPath;
             $.ajax({
                 type: 'GET',
                 url: mapSettings,
