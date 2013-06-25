@@ -1,8 +1,12 @@
-/**
- * AvatarUI-地图
+/*!
+ * SVG Map
  * @version v2.0.1
- * @author  Rocky(296456018@qq.com)
- * @date    2013-05-28
+ * @author  Rocky(rockyuse@163.com)
+ * @date    2013-06-20
+ *
+ * (c) 2012-2013 Rocky, http://rockydo.com
+ * This is licensed under the GNU LGPL, version 2.1 or later.
+ * For details, see: http://creativecommons.org/licenses/LGPL/2.1/
  */
 
 ;!function(win, $, undefined){
@@ -62,6 +66,7 @@
             clickCallback: function(stateData, obj){},
             external: false
         };
+
         SVGMap.prototype.setOptions = function (options) {
             if (options == null) {
                 options = null;
@@ -81,7 +86,7 @@
                     wrapper.innerHTML = "<rvml:group style='position : absolute; width: 1000px; height: 1000px; top: 0px; left: 0px' coordsize='1000,1000' class='rvml' id='vmlgroup_" + container + "'><\/rvml:group>";
                     nestedWrapper = document.getElementById("vmlgroup_" + container);
                 } else {
-                    wrapper.innerHTML = "<div class='svggroup'><\/div>";
+                    wrapper.innerHTML = '<div class="svggroup"></div>';
                     nestedWrapper = wrapper.getElementsByClassName("svggroup")[0];
                 }
                 var paper = new Raphael(nestedWrapper, width, height);
@@ -146,7 +151,7 @@
                 paper.w = width;
                 paper.h = height;
                 return paper;
-        }
+        };
 
         SVGMap.prototype.render = function(){
             var opt = this.options, 
@@ -192,7 +197,7 @@
                 });
             }else{
                 stateData = opt.stateData;
-            }
+            };
             
             var offsetXY = function(e){
                 var mouseX, 
