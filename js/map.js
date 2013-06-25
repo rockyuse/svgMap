@@ -1,6 +1,6 @@
 /*!
  * SVG Map
- * @version v2.0.1
+ * @version v1.0.1
  * @author  Rocky(rockyuse@163.com)
  * @date    2013-06-20
  *
