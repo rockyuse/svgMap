@@ -10,24 +10,6 @@
  */
 
 ;!function(win, $, undefined){
-    var __hasProp = {}.hasOwnProperty;
-
-    var mergeObjects = function (obj1, obj2) {
-        var key, out, val;
-        out = {};
-        for (key in obj1) {
-            if (!__hasProp.call(obj1, key)) continue;
-            val = obj1[key];
-            out[key] = val;
-        }
-        for (key in obj2) {
-            if (!__hasProp.call(obj2, key)) continue;
-            val = obj2[key];
-            out[key] = val;
-        }
-        return out;
-    };
-
     var SVGMap = (function(){
         function SVGMap(dom, options){
             this.dom = dom;
@@ -71,7 +53,7 @@
             if (options == null) {
                 options = null;
             }
-            this.options = mergeObjects(this.options, options);
+            $.extend(this.options, options);
             return this;
         };
 
