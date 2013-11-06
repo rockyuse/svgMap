@@ -322,4 +322,4 @@
         }
         return data.SVGMap;
     };
-}(this, jQuery);
+}(window, jQuery);
