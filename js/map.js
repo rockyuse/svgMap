@@ -7,9 +7,9 @@
  * (c) 2012-2013 Rocky, http://rockydo.com
  * This is licensed under the GNU LGPL, version 2.1 or later.
  * For details, see: http://creativecommons.org/licenses/LGPL/2.1/
- */;
-!
-function (win, $, undefined) {
+ */
+
+;!function (win, $, undefined) {
 	var SVGMap = (function () {
 		function SVGMap(dom, options) {
 			this.dom = dom;
