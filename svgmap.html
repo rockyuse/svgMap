@@ -15,7 +15,7 @@ html{background:#fff;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}bod
 /* base */
 
 body{font:12px/1.5 "Lucida Grande","Lucida Sans Unicode", Tahoma, SimSun,Helvetica,sans-serif; color:#2E313A;}
-.wrap{ width:900px; margin:0 auto; background:url(bg.png); border-left:1px solid #DDD; border-right:1px solid #DDD;}
+.wrap{ width:900px; margin:0 auto; border-left:1px solid #DDD; border-right:1px solid #DDD;}
 a{color:#0e4279; -moz-transition:color 0.3s ease 0s;}
 a:hover{color:#5B636A;}
 h1{ padding:20px 0 0 20px; font-size:24px; line-height:50px;} 
@@ -23,9 +23,18 @@ h2{ margin-top:30px; padding-left:10px; background-color: #ddd; font-size:14px; 
 
 
 /* 提示自定义 */
-.stateTip, #StateTip{display:none; position:absolute; padding:8px; background:#fff; border:2px solid #2385B1; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; font-size:12px; font-family:Tahoma; color:#333;}
+.mapTip{display:none; position:absolute; padding:8px; background:#fff; border: 1px solid #aaa; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; 
+-webkit-box-shadow: 0 5px 10px rgba(0,0,0,.3);
+box-shadow: 0 5px 10px rgba(0,0,0,.3);
+	font-size:12px; font-family:Tahoma; color:#333;}
 
-.mapInfo i{ display:inline-block; width:15px; height:15px; margin-top:5px; line-height:15px; font-style:normal; background:#aeaeae; color:#fff; font-size:11px; font-family: Tahoma; -webkit-border-radius:15px; border-radius:15px; text-align:center}
+.mapTip .arrow,
+.mapTip .arrowMask{ position: absolute; width: 0; height: 0; border-color: transparent; border-style: solid;}
+.mapTip .arrow{ bottom: -7px; left: 50%; margin-left: -7px; border-width: 7px; border-top-color: #999; border-top-color: rgba(0,0,0,.25); border-bottom-width: 0;}
+.mapTip .arrowMask{bottom: 1px; border-width: 6px; margin-left: -6px; border-top-color: #fff; border-bottom-width: 0;}
+
+.mapInfo i{ display:inline-block; width:15px; height:15px; margin-top:5px; line-height:15px; font-style:normal; background:#aeaeae; color:#fff; font-size:11px; font-family: Tahoma; -webkit-border-radius:15px; border-radius:15px; text-align:center
+}
 .mapInfo i.active{background:#E27F21;}
 .mapInfo span{ padding:0 5px 0 3px;}
 .mapInfo b{ font-weight:normal; color:#2770B5}
@@ -33,102 +42,111 @@ h2{ margin-top:30px; padding-left:10px; background-color: #ddd; font-size:14px; 
 
 <script type="text/javascript">
 $(function(){
+	// 默认
 	$('#ChinaMap').SVGMap({
-		mapName: 'china'
-	});
-
-	$('#ChinaMap1').SVGMap({
 		mapName: 'china',
 		mapWidth: 600,
 		mapHeight: 500
 	});
 
+	// 自定义宽高
+	$('#ChinaMap1').SVGMap({
+		mapName: 'china',
+		mapWidth: 500,
+		mapHeight: 400
+	});
 
+	// 自定义json数据
 	$('#ChinaMap2').SVGMap({
 		mapName: 'china',
 		stateData: {
-	                'heilongjiang': {'stateInitColor': 1, 'baifenbi': 0.236},
-	                'beijing': {'stateInitColor': 2},
-	                'shanghai': {'stateInitColor': 3},
-	                'tianjin': {'stateInitColor': 4},
-	                'sichuan': {'stateInitColor': 5},
-	                'shandong': {'stateInitColor': 6},
-	                'shanxi': {'stateInitColor': 3},
-	                'zhejiang': {'stateInitColor': 4},
-	                'jiangshu': {'stateInitColor': 2},
-	                'hunan': {'stateInitColor': 4},
-	                'guizou': {'stateInitColor': 5},
-	                'neimenggu': {'stateInitColor': 6},
-	                'henan': {'stateInitColor': 3},
-	                'gansu': {'stateInitColor': 4},
-	                'ningxia': {'stateInitColor': 2},
-	                'jilin': {'diabled': true}
-            	}
+			'heilongjiang': {'stateInitColor': 1, 'baifenbi': 0.236},
+			'beijing': {'stateInitColor': 2},
+			'shanghai': {'stateInitColor': 3},
+			'tianjin': {'stateInitColor': 4},
+			'sichuan': {'stateInitColor': 5},
+			'shandong': {'stateInitColor': 6},
+			'shanxi': {'stateInitColor': 3},
+			'zhejiang': {'stateInitColor': 4},
+			'jiangshu': {'stateInitColor': 2},
+			'hunan': {'stateInitColor': 4},
+			'guizou': {'stateInitColor': 5},
+			'neimenggu': {'stateInitColor': 6},
+			'henan': {'stateInitColor': 3},
+			'gansu': {'stateInitColor': 4},
+			'ningxia': {'stateInitColor': 2},
+			'jilin': {'diabled': true}
+		}
 	});
 
-
+	// 自定义xml数据
 	$('#ChinaMap3').SVGMap({
 		mapName: 'china',
         stateDataType: 'xml',
         stateSettingsXmlPath: 'js/res/chinaMapSettings.xml'
 	});
 
-
+	// hover提示内容自定义
 	$('#ChinaMap4').SVGMap({
-        stateTipHtml: function(stateData, obj){
+        mapTipHtml: function(stateData, obj){
             return 'id:' + ((stateData)[obj.id] && (stateData)[obj.id].baifenbi || obj.id) + '<br/>name:' + obj.name;
         }
 	});
 
-
+	// hover回调
 	$('#ChinaMap5').SVGMap({
         hoverCallback: function(stateData, obj){
             $('#HoverCallback').html('hover:'+obj.name);
         }
 	});
 
+	// click回调
 	$('#ChinaMap6').SVGMap({
+		clickColorChange: true,
         clickCallback: function(stateData, obj){
             $('#ClickCallback').html('点击了：'+obj.name);
+        },
+        unClickCallback: function(stateData, obj){
+            $('#UnClickCallback').html('取消点击：'+obj.name);
         }
 	});
 
+
 	// 外部控制地图
-	var mapObj = {};
-	$('#ChinaMap7').SVGMap({
-        external: mapObj
+	var map7 = $('#ChinaMap7').SVGMap({
+        external: true
 	});
 	$('#ChangeMap').click(function(){
-		mapObj.shandong.attr({fill: '#111'});
-		mapObj.shandong.mouseout(function(){
-			this.animate({
-                fill: '#ddd'
-            }, 250);
-		});
+		map7.externalData.shandong.attr({fill: '#111'});
+		map7.externalData.shandong['eventHoverLock'] = true; // hover event locked
+		// map7.externalData.shandong.mouseout(function(){
+		// 	this.animate({
+		// 		fill: '#ddd'
+		// 	}, 250);
+		// });
 	});
 	$('#ChangeMap1').click(function(){
-		mapObj.sichuan.attr({fill: '#00f'});
-		mapObj.sichuan.mouseout(function(){
-			this.animate({
-                fill: '#f0f'
-            }, 250);
-		});
+		map7.externalData.sichuan.attr({fill: '#00f'});
+		map7.externalData.shandong['eventClickLock'] = true; // click event locked
+		// map7.externalData.sichuan.mouseout(function(){
+		// 	this.animate({
+		// 		fill: '#f0f'
+		// 	}, 250);
+		// });
 	});
 
+	// 不显示提示内容
 	$('#ChinaMap8').SVGMap({
-        showTip: false
+		showTip: false
 	});
 
-
-	
-		
 	// $.ajax({
 	// 	url: projectName+'/idea123Action.do?method=getIdea123MapData&reportName='+reportName,
 	// 	data: data,
 	// 	dataType: 'json',
 	// 	success: function(data){
 
-	var data = {"jiangsu":{"value":"30.05%","index":"1","stateInitColor":"0"},"henan":{"value":"19.77%","index":"2","stateInitColor":"0"},"anhui":{"value":"10.85%","index":"3","stateInitColor":"0"},"zhejiang":{"value":"10.02%","index":"4","stateInitColor":"0"},"liaoning":{"value":"8.46%","index":"5","stateInitColor":"0"},"beijing":{"value":"4.04%","index":"6","stateInitColor":"1"},"hubei":{"value":"3.66%","index":"7","stateInitColor":"1"},"jilin":{"value":"2.56%","index":"8","stateInitColor":"1"},"shanghai":{"value":"2.47%","index":"9","stateInitColor":"1"},"guangxi":{"value":"2.3%","index":"10","stateInitColor":"1"},"sichuan":{"value":"1.48%","index":"11","stateInitColor":"2"},"guizhou":{"value":"0.99%","index":"12","stateInitColor":"2"},"hunan":{"value":"0.78%","index":"13","stateInitColor":"2"},"shandong":{"value":"0.7%","index":"14","stateInitColor":"2"},"guangdong":{"value":"0.44%","index":"15","stateInitColor":"2"},"jiangxi":{"value":"0.34%","index":"16","stateInitColor":"3"},"fujian":{"value":"0.27%","index":"17","stateInitColor":"3"},"yunnan":{"value":"0.23%","index":"18","stateInitColor":"3"},"hainan":{"value":"0.21%","index":"19","stateInitColor":"3"},"shanxi":{"value":"0.11%","index":"20","stateInitColor":"3"},"hebei":{"value":"0.11%","index":"21","stateInitColor":"4"},"neimongol":{"value":"0.04%","index":"22","stateInitColor":"4"},"tianjin":{"value":"0.04%","index":"23","stateInitColor":"4"},"gansu":{"value":"0.04%","index":"24","stateInitColor":"4"},"shaanxi":{"value":"0.02%","index":"25","stateInitColor":"4"},"macau":{"value":"0.0%","index":"26","stateInitColor":"7"},"hongkong":{"value":"0.0%","index":"27","stateInitColor":"7"},"taiwan":{"value":"0.0%","index":"28","stateInitColor":"7"},"qinghai":{"value":"0.0%","index":"29","stateInitColor":"7"},"xizang":{"value":"0.0%","index":"30","stateInitColor":"7"},"ningxia":{"value":"0.0%","index":"31","stateInitColor":"7"},"xinjiang":{"value":"0.0%","index":"32","stateInitColor":"7"},"heilongjiang":{"value":"0.0%","index":"33","stateInitColor":"7"},"chongqing":{"value":"0.0%","index":"34","stateInitColor":"7"}};
+	var data = {"jiangsu":{"value":"30.05%","index":"1","stateInitColor":"0"},"henan":{"value":"19.77%","index":"2","stateInitColor":"0"},"anhui":{"value":"10.85%","index":"3","stateInitColor":"0"},"zhejiang":{"value":"10.02%","index":"4","stateInitColor":"0"},"liaoning":{"value":"8.46%","index":"5","stateInitColor":"0"},"beijing":{"value":"4.04%","index":"6","stateInitColor":"1"},"hubei":{"value":"3.66%","index":"7","stateInitColor":"1"},"jilin":{"value":"2.56%","index":"8","stateInitColor":"1"},"shanghai":{"value":"2.47%","index":"9","stateInitColor":"1"},"guangxi":{"value":"2.3%","index":"10","stateInitColor":"1"},"sichuan":{"value":"1.48%","index":"11","stateInitColor":"2"},"guizhou":{"value":"0.99%","index":"12","stateInitColor":"2"},"hunan":{"value":"0.78%","index":"13","stateInitColor":"2"},"shandong":{"value":"0.7%","index":"14","stateInitColor":"2"},"guangdong":{"value":"0.44%","index":"15","stateInitColor":"2"},"jiangxi":{"value":"0.34%","index":"16","stateInitColor":"3"},"fujian":{"value":"0.27%","index":"17","stateInitColor":"3"},"yunnan":{"value":"0.23%","index":"18","stateInitColor":"3"},"hainan":{"value":"0.21%","index":"19","stateInitColor":"3"},"shanxi":{"value":"0.11%","index":"20","stateInitColor":"3"},"hebei":{"value":"0.11%","index":"21","stateInitColor":"4"},"neimenggu":{"value":"0.04%","index":"22","stateInitColor":"4"},"tianjin":{"value":"0.04%","index":"23","stateInitColor":"4"},"gansu":{"value":"0.04%","index":"24","stateInitColor":"4"},"shaanxi":{"value":"0.02%","index":"25","stateInitColor":"4"},"aomen":{"value":"0.0%","index":"26","stateInitColor":"7"},"xianggang":{"value":"0.0%","index":"27","stateInitColor":"7"},"taiwan":{"value":"0.0%","index":"28","stateInitColor":"7"},"qinghai":{"value":"0.0%","index":"29","stateInitColor":"7"},"xizang":{"value":"0.0%","index":"30","stateInitColor":"7"},"ningxia":{"value":"0.0%","index":"31","stateInitColor":"7"},"xinjiang":{"value":"0.0%","index":"32","stateInitColor":"7"},"heilongjiang":{"value":"0.0%","index":"33","stateInitColor":"7"},"chongqing":{"value":"0.0%","index":"34","stateInitColor":"7"}};
 			var i = 1;
 			for(k in data){
 				if(i <= 12){
@@ -141,20 +159,19 @@ $(function(){
 				}
 			}
 
-			var mapObj_1 = {};
 			var stateColorList = ['003399', '0058B0', '0071E1', '1C8DFF', '51A8FF', '82C0FF', 'AAD5ee', 'AAD5FF'];
 			
-			$('#RegionMap').SVGMap({
-				external: mapObj_1,
+			var mapRegion = $('#RegionMap').SVGMap({
+				external: true,
 				mapName: 'china',
 				mapWidth: 350,
 				mapHeight: 350,
 				stateData: data,
-				// stateTipWidth: 118,
-				// stateTipHeight: 47,
-				// stateTipX: 2,
-				// stateTipY: 0,
-				stateTipHtml: function (mapData, obj) {
+				// mapTipWidth: 118,
+				// mapTipHeight: 47,
+				// mapTipX: 2,
+				// mapTipY: 0,
+				mapTipHtml: function (mapData, obj) {
 					var _value = mapData[obj.id].value;
 					var _idx = mapData[obj.id].index;
 					var active = '';
@@ -169,20 +186,22 @@ $(function(){
 				var thisHtml = $(this).html();
 				$('#MapControl li').removeClass('select');
 				$(this).addClass('select');
-				$(document.body).append('<div id="StateTip"></div');
-				$('#StateTip').css({
-					left: $(mapObj_1[thisName].node).offset().left - 50,
-					top: $(mapObj_1[thisName].node).offset().top - 40
-				}).html(thisHtml).show();
-				mapObj_1[thisName].attr({
+				$(document.body).append('<div id="MapTip1" class="mapTip"><div class="con"></div></div');
+
+				$('#MapTip1 .con').html(thisHtml);
+				$('#MapTip1').css({
+					left: $(mapRegion.externalData[thisName].node).offset().left - 50,
+					top: $(mapRegion.externalData[thisName].node).offset().top - 40
+				}).show();
+				mapRegion.externalData[thisName].attr({
 					fill: '#E99A4D'
 				});
 			}, function () {
 				var thisName = $(this).attr('name');
 
-				$('#StateTip').remove();
+				$('#MapTip1').remove();
 				$('#MapControl li').removeClass('select');
-				mapObj_1[$(this).attr('name')].attr({
+				mapRegion.externalData[$(this).attr('name')].attr({
 					fill: "#" + stateColorList[data[$(this).attr('name')].stateInitColor]
 				});
 			});
@@ -191,19 +210,21 @@ $(function(){
 	// 	}
 	// });
 
-
+	// 世界地图
 	$('#WorldMap').SVGMap({
 		mapName: 'world',
-		mapWidth: 600,
-		mapHeight: 400
+		mapWidth: 800,
+		mapHeight: 600,
+		showName: false,
+		showCapital: false,
+		showOtherText: false
 	});
 });
 </script>
 </head>
 <body>
 	<div class="wrap">
-		<h1>SVG 地图（By Rocky）</h1>
-
+		<h1>SVG 地图（v1.1.0）</h1>
 
 		<div class="items" id="Item0">
             <h2>中国地图--默认</h2>
@@ -211,9 +232,12 @@ $(function(){
             <div class="itemCon">
             	<div id="ChinaMap"></div>
 	            <pre class="brush:js">
-		            $('#ChinaMap').SVGMap({
-						mapName: 'china'
-					});
+// 默认
+$('#ChinaMap').SVGMap({
+	mapName: 'china',
+	mapWidth: 600,
+	mapHeight: 500
+});
                 </pre>
 	        </div>
 	    </div>
@@ -225,10 +249,11 @@ $(function(){
             <div class="itemCon">
 	           <div id="ChinaMap1"></div>
 	            <pre class="brush:js">
+// 自定义宽高
 $('#ChinaMap1').SVGMap({
 	mapName: 'china',
-	mapWidth: 600,
-	mapHeight: 500
+	mapWidth: 500,
+	mapHeight: 400
 });
                 </pre>
 	        </div>
@@ -242,27 +267,29 @@ $('#ChinaMap1').SVGMap({
 	            <div id="ChinaMap2"></div>
 
 	            <pre class="brush:js">
+// 自定义json数据
 $('#ChinaMap2').SVGMap({
-		mapName: 'china',
-		stateData: {
-	                'heilongjiang': {'stateInitColor': 1, 'baifenbi': 0.236},
-	                'beijing': {'stateInitColor': 2},
-	                'shanghai': {'stateInitColor': 3},
-	                'tianjin': {'stateInitColor': 4},
-	                'sichuan': {'stateInitColor': 5},
-	                'shandong': {'stateInitColor': 6},
-	                'shanxi': {'stateInitColor': 3},
-	                'zhejiang': {'stateInitColor': 4},
-	                'jiangshu': {'stateInitColor': 2},
-	                'hunan': {'stateInitColor': 4},
-	                'guizou': {'stateInitColor': 5},
-	                'neimenggu': {'stateInitColor': 6},
-	                'henan': {'stateInitColor': 3},
-	                'gansu': {'stateInitColor': 4},
-	                'ningxia': {'stateInitColor': 2},
-	                'jilin': {'diabled': true}
-            	}
-	});
+	mapName: 'china',
+	showOtherText: true,
+	stateData: {
+		'heilongjiang': {'stateInitColor': 1, 'baifenbi': 0.236},
+		'beijing': {'stateInitColor': 2},
+		'shanghai': {'stateInitColor': 3},
+		'tianjin': {'stateInitColor': 4},
+		'sichuan': {'stateInitColor': 5},
+		'shandong': {'stateInitColor': 6},
+		'shanxi': {'stateInitColor': 3},
+		'zhejiang': {'stateInitColor': 4},
+		'jiangshu': {'stateInitColor': 2},
+		'hunan': {'stateInitColor': 4},
+		'guizou': {'stateInitColor': 5},
+		'neimenggu': {'stateInitColor': 6},
+		'henan': {'stateInitColor': 3},
+		'gansu': {'stateInitColor': 4},
+		'ningxia': {'stateInitColor': 2},
+		'jilin': {'diabled': true}
+	}
+});
                 </pre>
 	        </div>
 	    </div>
@@ -273,10 +300,11 @@ $('#ChinaMap2').SVGMap({
             <div class="itemCon">
 	            <div id="ChinaMap3"></div>
 	            <pre class="brush:js">
+// 自定义xml数据
 $('#ChinaMap3').SVGMap({
 	mapName: 'china',
-	stateDataType: 'xml',
-	stateSettingsXmlPath: 'js/res/chinaMapSettings.xml'
+    stateDataType: 'xml',
+    stateSettingsXmlPath: 'js/res/chinaMapSettings.xml'
 });
                 </pre>
 	        </div>
@@ -284,15 +312,16 @@ $('#ChinaMap3').SVGMap({
 	    
 	    
 	    <div class="items" id="Item4">
-	        <h2>提示自定义</h2>
+	        <h2>hover提示内容自定义</h2>
 	        <a href="javascript:;" class="fold"></a>
             <div class="itemCon">
             	<div id="ChinaMap4"></div>
 	            <pre class="brush:js">
+// hover提示内容自定义
 $('#ChinaMap4').SVGMap({
-	stateTipHtml: function(stateData, obj){
-		return 'id:' + ((stateData)[obj.id] && (stateData)[obj.id].baifenbi || obj.id) + '<br/>name:' + obj.name;
-	}
+    mapTipHtml: function(stateData, obj){
+        return 'id:' + ((stateData)[obj.id] && (stateData)[obj.id].baifenbi || obj.id) + '<br/>name:' + obj.name;
+    }
 });
                 </pre>
 	        </div>
@@ -305,10 +334,11 @@ $('#ChinaMap4').SVGMap({
             	<div id="HoverCallback" style="font-size:14px; color:red"></div>
             	<div id="ChinaMap5"></div>
 	            <pre class="brush:js">
+// hover回调
 $('#ChinaMap5').SVGMap({
-       hoverCallback: function(stateData, obj){
-           $('#HoverCallback').html('hover:'+obj.name);
-       }
+    hoverCallback: function(stateData, obj){
+        $('#HoverCallback').html('hover:'+obj.name);
+    }
 });
                 </pre>
 	        </div>
@@ -319,12 +349,18 @@ $('#ChinaMap5').SVGMap({
 	        <a href="javascript:;" class="fold"></a>
             <div class="itemCon">
             	<div id="ClickCallback" style="font-size:14px; color:red"></div>
+            	<div id="UnClickCallback" style="font-size:14px; color:blue"></div>
             	<div id="ChinaMap6"></div>
 	            <pre class="brush:js">
+// click回调
 $('#ChinaMap6').SVGMap({
-       clickCallback: function(stateData, obj){
-           $('#ClickCallback').html('点击了：'+obj.name);
-       }
+	clickColorChange: true,
+    clickCallback: function(stateData, obj){
+        $('#ClickCallback').html('点击了：'+obj.name);
+    },
+    unClickCallback: function(stateData, obj){
+        $('#UnClickCallback').html('取消点击：'+obj.name);
+    }
 });
                 </pre>
 	        </div>
@@ -338,26 +374,28 @@ $('#ChinaMap6').SVGMap({
 	    		<a id="ChangeMap1" href="javascript:;" style="line-height:30px;">&nbsp;&nbsp;改变四川的颜色</a>
             	<div id="ChinaMap7"></div>
 	            <pre class="brush:js">
-var mapObj = {};
-	$('#ChinaMap7').SVGMap({
-        external: mapObj
-	});
-	$('#ChangeMap').click(function(){
-		mapObj.shandong.attr({fill: '#111'});
-		mapObj.shandong.mouseout(function(){
-			this.animate({
-                fill: '#ddd'
-            }, 250);
-		});
-	});
-	$('#ChangeMap1').click(function(){
-		mapObj.sichuan.attr({fill: '#00f'});
-		mapObj.sichuan.mouseout(function(){
-			this.animate({
-                fill: '#f0f'
-            }, 250);
-		});
-	});
+// 外部控制地图
+var map7 = $('#ChinaMap7').SVGMap({
+    external: true
+});
+$('#ChangeMap').click(function(){
+	map7.externalData.shandong.attr({fill: '#111'});
+	map7.externalData.shandong['eventHoverLock'] = true; // hover event locked
+	// map7.externalData.shandong.mouseout(function(){
+	// 	this.animate({
+	// 		fill: '#ddd'
+	// 	}, 250);
+	// });
+});
+$('#ChangeMap1').click(function(){
+	map7.externalData.sichuan.attr({fill: '#00f'});
+	map7.externalData.shandong['eventClickLock'] = true; // click event locked
+	// map7.externalData.sichuan.mouseout(function(){
+	// 	this.animate({
+	// 		fill: '#f0f'
+	// 	}, 250);
+	// });
+});
                 </pre>
 	        </div>
 	    </div>
@@ -368,9 +406,10 @@ var mapObj = {};
             <div class="itemCon">
             	<div id="ChinaMap8"></div>
 	            <pre class="brush:js">
+// 不显示提示内容
 $('#ChinaMap8').SVGMap({
-        showTip: false
-	});
+    showTip: false
+});
 
                 </pre>
 	        </div>
@@ -382,7 +421,7 @@ $('#ChinaMap8').SVGMap({
             <div class="itemCon">
 <style type="text/css">
 .regionList{float:left; margin-top:15px;}
-.regionList ul{float:left; width:110px; height:100%; margin-right:5px; display:inline; font-family:"微软雅黑"}
+.regionList ul{float:left; width:110px; height:100%; margin-right:5px; display:inline; font-family: Microsoft yahei;}
 .regionList ul li{ height:24px; margin-left:10px; padding:0 0px; border:1px solid #fff; line-height:24px;}
 .regionList ul li.select{border:1px solid #D3D3D3; background:#FFF1BF}
 
@@ -404,67 +443,75 @@ $('#ChinaMap8').SVGMap({
 				</div>
             	
 	            <pre class="brush:js">
+// $.ajax({
+// 	url: projectName+'/idea123Action.do?method=getIdea123MapData&reportName='+reportName,
+// 	data: data,
+// 	dataType: 'json',
+// 	success: function(data){
 
-	var data = {"jiangsu":{"value":"30.05%","index":"1","stateInitColor":"0"},"henan":{"value":"19.77%","index":"2","stateInitColor":"0"},"anhui":{"value":"10.85%","index":"3","stateInitColor":"0"},"zhejiang":{"value":"10.02%","index":"4","stateInitColor":"0"},"liaoning":{"value":"8.46%","index":"5","stateInitColor":"0"},"beijing":{"value":"4.04%","index":"6","stateInitColor":"1"},"hubei":{"value":"3.66%","index":"7","stateInitColor":"1"},"jilin":{"value":"2.56%","index":"8","stateInitColor":"1"},"shanghai":{"value":"2.47%","index":"9","stateInitColor":"1"},"guangxi":{"value":"2.3%","index":"10","stateInitColor":"1"},"sichuan":{"value":"1.48%","index":"11","stateInitColor":"2"},"guizhou":{"value":"0.99%","index":"12","stateInitColor":"2"},"hunan":{"value":"0.78%","index":"13","stateInitColor":"2"},"shandong":{"value":"0.7%","index":"14","stateInitColor":"2"},"guangdong":{"value":"0.44%","index":"15","stateInitColor":"2"},"jiangxi":{"value":"0.34%","index":"16","stateInitColor":"3"},"fujian":{"value":"0.27%","index":"17","stateInitColor":"3"},"yunnan":{"value":"0.23%","index":"18","stateInitColor":"3"},"hainan":{"value":"0.21%","index":"19","stateInitColor":"3"},"shanxi":{"value":"0.11%","index":"20","stateInitColor":"3"},"hebei":{"value":"0.11%","index":"21","stateInitColor":"4"},"neimongol":{"value":"0.04%","index":"22","stateInitColor":"4"},"tianjin":{"value":"0.04%","index":"23","stateInitColor":"4"},"gansu":{"value":"0.04%","index":"24","stateInitColor":"4"},"shaanxi":{"value":"0.02%","index":"25","stateInitColor":"4"},"macau":{"value":"0.0%","index":"26","stateInitColor":"7"},"hongkong":{"value":"0.0%","index":"27","stateInitColor":"7"},"taiwan":{"value":"0.0%","index":"28","stateInitColor":"7"},"qinghai":{"value":"0.0%","index":"29","stateInitColor":"7"},"xizang":{"value":"0.0%","index":"30","stateInitColor":"7"},"ningxia":{"value":"0.0%","index":"31","stateInitColor":"7"},"xinjiang":{"value":"0.0%","index":"32","stateInitColor":"7"},"heilongjiang":{"value":"0.0%","index":"33","stateInitColor":"7"},"chongqing":{"value":"0.0%","index":"34","stateInitColor":"7"}};
-			var i = 1;
-			for(k in data){
-				if(i &lt;= 12){
-					var _cls = i &lt; 4 ? 'active' : ''; 
-					$('#MapControl .list1').append('<li name="'+k+'"><div class="mapInfo"><i class="'+_cls+'">'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
-				}else if(i &lt;= 24){
-					$('#MapControl .list2').append('<li name="'+k+'"><div class="mapInfo"><i>'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
-				}else{
-					$('#MapControl .list3').append('<li name="'+k+'"><div class="mapInfo"><i>'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
-				}
+var data = {"jiangsu":{"value":"30.05%","index":"1","stateInitColor":"0"},"henan":{"value":"19.77%","index":"2","stateInitColor":"0"},"anhui":{"value":"10.85%","index":"3","stateInitColor":"0"},"zhejiang":{"value":"10.02%","index":"4","stateInitColor":"0"},"liaoning":{"value":"8.46%","index":"5","stateInitColor":"0"},"beijing":{"value":"4.04%","index":"6","stateInitColor":"1"},"hubei":{"value":"3.66%","index":"7","stateInitColor":"1"},"jilin":{"value":"2.56%","index":"8","stateInitColor":"1"},"shanghai":{"value":"2.47%","index":"9","stateInitColor":"1"},"guangxi":{"value":"2.3%","index":"10","stateInitColor":"1"},"sichuan":{"value":"1.48%","index":"11","stateInitColor":"2"},"guizhou":{"value":"0.99%","index":"12","stateInitColor":"2"},"hunan":{"value":"0.78%","index":"13","stateInitColor":"2"},"shandong":{"value":"0.7%","index":"14","stateInitColor":"2"},"guangdong":{"value":"0.44%","index":"15","stateInitColor":"2"},"jiangxi":{"value":"0.34%","index":"16","stateInitColor":"3"},"fujian":{"value":"0.27%","index":"17","stateInitColor":"3"},"yunnan":{"value":"0.23%","index":"18","stateInitColor":"3"},"hainan":{"value":"0.21%","index":"19","stateInitColor":"3"},"shanxi":{"value":"0.11%","index":"20","stateInitColor":"3"},"hebei":{"value":"0.11%","index":"21","stateInitColor":"4"},"neimenggu":{"value":"0.04%","index":"22","stateInitColor":"4"},"tianjin":{"value":"0.04%","index":"23","stateInitColor":"4"},"gansu":{"value":"0.04%","index":"24","stateInitColor":"4"},"shaanxi":{"value":"0.02%","index":"25","stateInitColor":"4"},"aomen":{"value":"0.0%","index":"26","stateInitColor":"7"},"xianggang":{"value":"0.0%","index":"27","stateInitColor":"7"},"taiwan":{"value":"0.0%","index":"28","stateInitColor":"7"},"qinghai":{"value":"0.0%","index":"29","stateInitColor":"7"},"xizang":{"value":"0.0%","index":"30","stateInitColor":"7"},"ningxia":{"value":"0.0%","index":"31","stateInitColor":"7"},"xinjiang":{"value":"0.0%","index":"32","stateInitColor":"7"},"heilongjiang":{"value":"0.0%","index":"33","stateInitColor":"7"},"chongqing":{"value":"0.0%","index":"34","stateInitColor":"7"}};
+		var i = 1;
+		for(k in data){
+			if(i <= 12){
+				var _cls = i < 4 ? 'active' : ''; 
+				$('#MapControl .list1').append('<li name="'+k+'"><div class="mapInfo"><i class="'+_cls+'">'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
+			}else if(i <= 24){
+				$('#MapControl .list2').append('<li name="'+k+'"><div class="mapInfo"><i>'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
+			}else{
+				$('#MapControl .list3').append('<li name="'+k+'"><div class="mapInfo"><i>'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
 			}
+		}
 
-			var mapObj_1 = {};
-			var stateColorList = ['003399', '0058B0', '0071E1', '1C8DFF', '51A8FF', '82C0FF', 'AAD5FF'];
+		var stateColorList = ['003399', '0058B0', '0071E1', '1C8DFF', '51A8FF', '82C0FF', 'AAD5ee', 'AAD5FF'];
+		
+		var mapRegion = $('#RegionMap').SVGMap({
+			external: true,
+			mapName: 'china',
+			mapWidth: 350,
+			mapHeight: 350,
+			stateData: data,
+			// mapTipWidth: 118,
+			// mapTipHeight: 47,
+			// mapTipX: 2,
+			// mapTipY: 0,
+			mapTipHtml: function (mapData, obj) {
+				var _value = mapData[obj.id].value;
+				var _idx = mapData[obj.id].index;
+				var active = '';
+				_idx &lt; 4 ? active = 'active' : active = '';
+				var tipStr = '<div class="mapInfo"><i class="' + active + '">' + _idx + '</i><span>' + obj.name + '</span><b>' + _value + '</b></div>';
+				return tipStr;
+			}
+		});
+		$('#MapControl li').hover(function () {
+			var thisName = $(this).attr('name');
 			
-			$('#RegionMap').SVGMap({
-				external: mapObj_1,
-				mapName: 'china',
-				mapWidth: 350,
-				mapHeight: 350,
-				stateData: data,
-				// stateTipWidth: 118,
-				// stateTipHeight: 47,
-				// stateTipX: 2,
-				// stateTipY: 0,
-				stateTipHtml: function (mapData, obj) {
-					var _value = mapData[obj.id].value;
-					var _idx = mapData[obj.id].index;
-					var active = '';
-					_idx &lt; 4 ? active = 'active' : active = '';
-					var tipStr = '<div class="mapInfo"><i class="' + active + '">' + _idx + '</i><span>' + obj.name + '</span><b>' + _value + '</b></div>';
-					return tipStr;
-				}
-			});
-			$('#MapControl li').hover(function () {
-				var thisName = $(this).attr('name');
-				
-				var thisHtml = $(this).html();
-				$('#MapControl li').removeClass('select');
-				$(this).addClass('select');
-				$(document.body).append('<div id="StateTip">&lt;/div');
+			var thisHtml = $(this).html();
+			$('#MapControl li').removeClass('select');
+			$(this).addClass('select');
+			$(document.body).append('<div id="MapTip1" class="mapTip"><div class="con"></div></div');
 
-				$('#StateTip').css({
-					left: $(mapObj_1[thisName].node).offset().left - 50,
-					top: $(mapObj_1[thisName].node).offset().top - 40
-				}).html(thisHtml).show();
-				mapObj_1[thisName].attr({
-					fill: '#E99A4D'
-				});
-			}, function () {
-				var thisName = $(this).attr('name');
-				$('#StateTip').remove();
-				$('#MapControl li').removeClass('select');
-				mapObj_1[$(this).attr('name')].attr({
-					fill: "#" + stateColorList[data[$(this).attr('name')].stateInitColor]
-				});
+			$('#MapTip1 .con').html(thisHtml);
+			$('#MapTip1').css({
+				left: $(mapRegion.externalData[thisName].node).offset().left - 50,
+				top: $(mapRegion.externalData[thisName].node).offset().top - 40
+			}).show();
+			mapRegion.externalData[thisName].attr({
+				fill: '#E99A4D'
 			});
-			
-			$('#MapColor').show();
+		}, function () {
+			var thisName = $(this).attr('name');
+
+			$('#MapTip1').remove();
+			$('#MapControl li').removeClass('select');
+			mapRegion.externalData[$(this).attr('name')].attr({
+				fill: "#" + stateColorList[data[$(this).attr('name')].stateInitColor]
+			});
+		});
+		
+		$('#MapColor').show();
+// 	}
+// });
                 </pre>
 	        </div>
 	    </div>
@@ -475,11 +522,12 @@ $('#ChinaMap8').SVGMap({
             <div class="itemCon">
             	<div id="WorldMap"></div>
 	            <pre class="brush:js">
+// 世界地图
 $('#WorldMap').SVGMap({
-		mapName: 'world',
-		mapWidth: 600,
-		mapHeight: 400
-	});
+	mapName: 'world',
+	mapWidth: 800,
+	mapHeight: 600
+});
                 </pre>
 	        </div>
 	    </div>

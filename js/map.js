@@ -1,17 +1,36 @@
 /*!
  * SVG Map
- * @version v1.0.2
+ * @version v1.1.0
  * @author  Rocky(rockyuse@163.com)
- * @date    2014-01-16
+ * @date    2014-10-13
  *
- * (c) 2012-2013 Rocky, http://rockydo.com
+ * (c) 2012-2014 Rocky, http://rockydo.com
  * This is licensed under the GNU LGPL, version 2.1 or later.
  * For details, see: http://creativecommons.org/licenses/LGPL/2.1/
  */
 
-;!function (win, $, undefined) {
-	var SVGMap = (function () {
+;!function (window, $, undefined) {
+	Array.prototype.indexOf = function (value) {
+		var i, _ref;
+		i = (_ref = arguments[1]) != null ? _ref : 0;
+		if (i < 0) i += length;
+		i = Math.max(i, 0);
+		while (i < this.length) {
+			if (i in this) if (this[i] === value) return i;
+			i++;
+		}
+		return -1;
+	};
+	Array.prototype.remove = function (val) {
+		var index = this.indexOf(val);
+		if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
+
+	var SVGMap = (function() {
 		function SVGMap(dom, options) {
+			this.externalData = {};
 			this.dom = dom;
 			this.setOptions(options);
 			this.render();
@@ -20,31 +39,40 @@
 			mapName: 'china',
 			mapWidth: 500,
 			mapHeight: 400,
-			stateColorList: ['2770B5', '429DD4', '5AABDA', '1C8DFF', '70B3DD', 'C6E1F4', 'EDF2F6'],
+			stateColorList: ['#2770B5', '#429DD4', '#5AABDA', '#1C8DFF', '#70B3DD', '#C6E1F4', '#EDF2F6'],
+
 			stateDataAttr: ['stateInitColor', 'stateHoverColor', 'stateSelectedColor', 'baifenbi'],
 			stateDataType: 'json',
 			stateSettingsXmlPath: '',
+
 			stateData: {},
 
 			strokeWidth: 1,
-			strokeColor: 'F9FCFE',
+			strokeColor: '#F9FCFE',
 
-			stateInitColor: 'AAD5FF',
-			stateHoverColor: 'feb41c',
-			stateSelectedColor: 'E32F02',
-			stateDisabledColor: 'eeeeee',
+			stateInitColor: '#AAD5FF',
+			stateHoverColor: '#feb41c',
+			stateSelectedColor: '#EC971F',
+			stateDisabledColor: '#eeeeee',
 
 			showTip: true,
-			stateTipWidth: 100,
-			//stateTipHeight: 50,
-			stateTipX: 0,
-			stateTipY: -10,
-			stateTipHtml: function (stateData, obj) {
+			mapTipWidth: 100,
+			//mapTipHeight: 50,
+			mapTipX: 0,
+			mapTipY: -10,
+			mapTipHtml: function (stateData, obj) {
 				return obj.name;
 			},
 
 			hoverCallback: function (stateData, obj) {},
+
+			clickColorChange: false,
 			clickCallback: function (stateData, obj) {},
+			unClickCallback: function (stateData, obj) {},
+
+			hoverRegion: '',
+			clickedRegion: [],
+			
 			external: false
 		};
 
@@ -56,6 +84,7 @@
 			return this;
 		};
 
+		// ie Pollfill
 		SVGMap.prototype.scaleRaphael = function (container, width, height) {
 			var wrapper = document.getElementById(container);
 			if (!wrapper.style.position) wrapper.style.position = "relative";
@@ -134,7 +163,8 @@
 			return paper;
 		};
 
-		SVGMap.prototype.render = function () {
+		SVGMap.prototype.render = function(){
+			var self = this;
 			var opt = this.options,
 				_self = this.dom,
 				mapName = opt.mapName,
@@ -179,40 +209,128 @@
 				stateData = opt.stateData;
 			};
 
+			// 坐标点的xy坐标
 			var offsetXY = function (e) {
-					var mouseX, mouseY, tipWidth = $('.stateTip').outerWidth(),
-						tipHeight = $('.stateTip').outerHeight();
-					if (e && e.pageX) {
-						mouseX = e.pageX;
-						mouseY = e.pageY;
-					} else {
-						mouseX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-						mouseY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-					}
-					mouseX = mouseX - tipWidth / 2 + opt.stateTipX < 0 ? 0 : mouseX - tipWidth / 2 + opt.stateTipX;
-					mouseY = mouseY - tipHeight + opt.stateTipY < 0 ? mouseY - opt.stateTipY : mouseY - tipHeight + opt.stateTipY;
-					return [mouseX, mouseY];
-				};
+				var mouseX, mouseY, tipWidth = $('#MapTip').outerWidth(),
+					tipHeight = $('#MapTip').outerHeight();
+				if (e && e.pageX) {
+					mouseX = e.pageX;
+					mouseY = e.pageY;
+				} else {
+					mouseX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+					mouseY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+				}
+				mouseX = mouseX - tipWidth / 2 + opt.mapTipX < 0 ? 0 : mouseX - tipWidth / 2 + opt.mapTipX;
+				mouseY = mouseY - tipHeight + opt.mapTipY < 0 ? mouseY - opt.mapTipY : mouseY - tipHeight + opt.mapTipY;
+				return [mouseX, mouseY];
+			};
 
-			var current, reTimer;
+			var current;
 
 			var r = this.scaleRaphael(_self.attr('id'), mapConfig.width, mapConfig.height),
-				attributes = {
-					fill: '#' + opt.stateInitColor,
-					cursor: 'pointer',
-					stroke: '#' + opt.strokeColor,
-					'stroke-width': opt.strokeWidth,
-					'stroke-linejoin': 'round'
-				};
+			attributes = {
+				'fill': opt.stateInitColor,
+				'cursor': 'pointer',
+				'stroke': opt.strokeColor,
+				'stroke-width': opt.strokeWidth,
+				'stroke-linejoin': 'round'
+			};
+
+			// hover
+			function sharpHover(e, obj){
+				if(opt.hoverRegion == obj.id){
+					opt.timeTimer = 1;
+					clearTimeout(obj.timer);
+					return;
+				}
+				if(!opt.external || typeof self.externalData[obj.id].eventHoverLock == 'undefined' || self.externalData[obj.id].eventHoverLock == false){
+					if(opt.clickedRegion.indexOf(obj.id) == -1){
+						obj.animate({
+							fill: stateColor[obj.id].hoverColor
+						}, 150);
+					}
+				}
+				
+				if(opt.showTip){
+					opt.timeTimer = 1;
+					if ($('#MapTip').length == 0) {
+						$(document.body).append('<div id="MapTip" class="mapTip"><div class="con"></div><div class="arrow"><div class="arrowMask"></div></div></div');
+					}
+					$('#MapTip .con').html(opt.mapTipHtml(stateData, obj));
+					var _offsetXY = new offsetXY(e);
+
+					$('#MapTip').css({
+						width: opt.mapTipWidth || 'auto',
+						height: opt.mapTipHeight || 'auto',
+						left: _offsetXY[0],
+						top: _offsetXY[1]
+					}).show();
+				}
+
+				opt.hoverRegion = obj.id;
+				opt.hoverCallback(stateData, obj);
+			}
+
+			// out
+			function sharpOut(e, obj){
+				opt.timeTimer = 0;
+				opt.hoverRegion = '';
+
+				obj.timer = setTimeout(function(){
+					if(opt.hoverRegion == obj.id){
+						return;
+					}
+
+					if(!opt.external || typeof self.externalData[obj.id].eventHoverLock == 'undefined' || self.externalData[obj.id].eventHoverLock == false){
+						if(opt.clickedRegion.indexOf(obj.id) == -1){
+							obj.animate({
+								fill: stateColor[obj.id].initColor
+							}, 100);
+						}
+					}
+					if (opt.showTip && opt.timeTimer != 1) {
+						$('#MapTip').remove();
+					}
+				}, 100);
+			}
+
+			// click
+			function sharpClick(e, obj){
+				if(opt.clickColorChange == false){
+					return;
+				}
+				if(!opt.external || typeof self.externalData[obj.id].eventClickLock == 'undefined' || self.externalData[obj.id].eventClickLock == false){
+					if(opt.clickedRegion.indexOf(obj.id) == -1){
+						opt.clickedRegion.push(obj.id);
+						obj.animate({
+							fill: stateColor[obj.id].selectedColor
+						}, 150);
+						opt.clickCallback(stateData, obj);
+					}else{
+						opt.clickedRegion.remove(obj.id);
+
+						if(!opt.external || typeof self.externalData[obj.id].eventHoverLock == 'undefined' || self.externalData[obj.id].eventHoverLock == false){
+							obj.animate({
+								fill: stateColor[obj.id].hoverColor
+							}, 150);
+						}else{
+							obj.animate({
+								fill: stateColor[obj.id].initColor
+							}, 150);
+						}
+						opt.unClickCallback(stateData, obj);
+					}
+				}
+			}
 
 			var stateColor = {};
 
 			for (var state in mapConfig.shapes) {
 				var thisStateData = stateData[state],
-					initColor = '#' + (thisStateData && opt.stateColorList[thisStateData.stateInitColor] || opt.stateInitColor),
-					hoverColor = '#' + (thisStateData && thisStateData.stateHoverColor || opt.stateHoverColor),
-					selectedColor = '#' + (thisStateData && thisStateData.stateSelectedColor || opt.stateSelectedColor),
-					disabledColor = '#' + (thisStateData && thisStateData.stateDisabledColor || opt.stateDisabledColor);
+					initColor = (thisStateData && opt.stateColorList[thisStateData.stateInitColor] || opt.stateInitColor),
+					hoverColor = (thisStateData && thisStateData.stateHoverColor || opt.stateHoverColor),
+					selectedColor = (thisStateData && thisStateData.stateSelectedColor || opt.stateSelectedColor),
+					disabledColor = (thisStateData && thisStateData.stateDisabledColor || opt.stateDisabledColor);
 
 				stateColor[state] = {};
 
@@ -223,10 +341,12 @@
 				var obj = r.path(mapConfig['shapes'][state]);
 				obj.id = state;
 				obj.name = mapConfig['names'][state];
+				obj.timer = '';
 				obj.attr(attributes);
 
 				if (opt.external) {
-					opt.external[obj.id] = obj;
+					// opt.external[obj.id] = obj;
+					self.externalData[obj.id] = obj;
 				}
 
 				if (stateData[state] && stateData[state].diabled) {
@@ -239,65 +359,29 @@
 						fill: initColor
 					});
 
+					// 划过改变颜色
 					obj.hover(function (e) {
-						if (this != current) {
-							this.animate({
-								fill: stateColor[this.id].hoverColor
-							}, 250);
+						sharpHover(e, this);
+					}, function(e) {
+						if(opt.external && typeof self.externalData[obj.id].eventHoverLock != 'undefined' && self.externalData[obj.id].eventHoverLock == true){
+							return;
 						}
-						if (opt.showTip) {
-							clearTimeout(reTimer);
-							if ($('.stateTip').length == 0) {
-								$(document.body).append('<div class="stateTip"></div');
-							}
-							$('.stateTip').html(opt.stateTipHtml(stateData, this));
-							var _offsetXY = new offsetXY(e);
-
-							$('.stateTip').css({
-								width: opt.stateTipWidth || 'auto',
-								height: opt.stateTipHeight || 'auto',
-								left: _offsetXY[0],
-								top: _offsetXY[1]
-							}).show();
+						sharpOut(e, this);
+					}).click(function(e){
+						if(opt.external && typeof self.externalData[obj.id].eventClickLock != 'undefined' && self.externalData[obj.id].eventClickLock == true){
+							return;
 						}
-
-						opt.hoverCallback(stateData, this);
-					});
-
-					obj.mouseout(function () {
-						if (this != current) {
-							this.animate({
-								fill: stateColor[this.id].initColor
-							}, 250);
-						}
-						// $('.stateTip').hide();
-						if (opt.showTip) {
-							reTimer = setTimeout(function () {
-								$('.stateTip').remove();
-							}, 100);
-						}
-					});
-
-					obj.mouseup(function (e) {
-						if (current) {
-							current.animate({
-								fill: stateColor[current.id].initColor
-							}, 250);
-						}
-
-						this.animate({
-							fill: stateColor[this.id].selectedColor
-						}, 250);
-
-						current = this;
-						opt.clickCallback(stateData, this);
+						sharpClick(e, this);
 					});
 				}
-				r.changeSize(opt.mapWidth, opt.mapHeight, false, false);
 			}
+
+			// 整体放大缩小
+			r.changeSize(opt.mapWidth, opt.mapHeight, false, false);
+
 			document.body.onmousemove = function (e) {
 				var _offsetXY = new offsetXY(e);
-				$('.stateTip').css({
+				$('#MapTip').css({
 					left: _offsetXY[0],
 					top: _offsetXY[1]
 				});
