@@ -6,7 +6,7 @@ svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器
 
 ##  文档与示例
 
-<http://rockydo.com/svgmap/svgmap.html>
+<http://rockyuse.github.io/widget/svgmap/svgmap.html>
 
 ##  兼容性
 
@@ -23,26 +23,24 @@ v1.0.0
 1. 基本功能支持
 
 
-##  获取完整版
-
-完整版包含的功能：
+##  完整版的附加功能：
 
 1. 支持以显示省的名称  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo1.jpg)
 
-2. 支持省会的点  
+2. 支持省份详细数据  
+![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo4.gif)
+
+3. 支持省会的点  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo2.jpg)
 
-3. 支持自定义显示数据  
+4. 支持自定义显示数据  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo3.jpg)
 
-4. 支持点击跳转链接
+5. 支持点击跳转链接
 
-5. 支持更清晰的地图
-
-
-### 完整版的收费：￥200
-
+6. 支持更清晰的地图, 完整版的数据要更清晰，而且边疆争议地区的数据更偏向中国
+![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo5.png)
 
 联系方式：
 
