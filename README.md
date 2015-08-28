@@ -2,7 +2,7 @@
 svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器，在api的设置上比较简单，目的就是要做一款比较小巧的组件，同时又能满足基本的地图展示需求，在加载速度和性能上都不比Canvas地图差。
 所以广泛适用于基本的地图数据展示页面。
 
-对外公布的版本并没有把所有功能展示出来，如果想有更多功能请看完整版
+对外公布的版本并没有把所有功能展示出来，[完整版](#完整版的附加功能)会有很多扩展功能，如果需要完整版请[联系我](#联系我)。
 
 ##  文档与示例
 
@@ -10,7 +10,7 @@ svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器
 
 ##  兼容性
 
-测试通过：IE6-IE11、Chrome、Firefox、Safari、Opera
+测试通过：IE6+、Chrome、Firefox、Safari、Opera
 
 ##  更新历史
 
@@ -23,7 +23,7 @@ v1.0.0
 1. 基本功能支持
 
 
-##  完整版的附加功能：
+## 完整版的附加功能：
 
 1. 支持以显示省的名称  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo1.jpg)
@@ -42,7 +42,7 @@ v1.0.0
 6. 支持更清晰的地图, 完整版的数据要更清晰，而且边疆争议地区的数据更偏向中国
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo5.png)
 
-联系方式：
+## 联系我：
 
 QQ:     296456018
     
