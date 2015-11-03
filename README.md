@@ -42,6 +42,9 @@ v1.0.0
 6. 支持更清晰的地图, 完整版的数据要更清晰，而且边疆争议地区的数据更偏向中国
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo5.png)
 
+7. 图片转换
+![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo6.jpg)
+
 ## 联系我：
 
 QQ:     296456018
