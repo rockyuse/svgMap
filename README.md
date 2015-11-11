@@ -6,7 +6,7 @@ svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器
 
 ##  文档与示例
 
-<http://rockyuse.github.io/widget/svgmap/svgmap.html>
+[Demo](http://rockyuse.github.io/widget/svgmap/svgmap.html)
 
 ##  兼容性
 
