@@ -13,7 +13,6 @@ svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器
 测试通过：IE6+、Chrome、Firefox、Safari、Opera
 
 ##  更新历史
-
 v1.1.0
 
 1. 组件改为面向对象的组织架构，在返回值里面可以得到地图数据。
@@ -25,24 +24,29 @@ v1.0.0
 
 ## 完整版的附加功能：
 
-1. 支持以显示省的名称  
-![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo1.jpg)
-
-2. 支持省份详细数据  
+1. 省份的城市数据  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo4.gif)
+
+2. 城市的区县数据（全国344个区县数据）
+![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo7.png)
+
+![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo5.gif)
 
 3. 支持省会的点  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo2.jpg)
 
-4. 支持自定义显示数据  
+4. 支持以显示省的名称  
+![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo1.jpg)
+
+5. 支持自定义显示数据  
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo3.jpg)
 
-5. 支持点击跳转链接
+6. 支持点击跳转链接
 
-6. 支持更清晰的地图, 完整版的数据要更清晰，而且边疆争议地区的数据更偏向中国
+7. 支持更清晰的地图, 完整版的数据要更清晰，而且边疆争议地区的数据更偏向中国
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo5.png)
 
-7. 图片转换
+8. 图片转换
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo6.jpg)
 
 ## 联系我：
