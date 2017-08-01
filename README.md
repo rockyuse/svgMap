@@ -13,7 +13,7 @@ svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器
 测试通过：IE6+、Chrome、Firefox、Safari、Opera
 
 ##  更新历史
-v1.2.0
+v1.1.0
 
 1. 组件改为面向对象的组织架构，在返回值里面可以得到地图数据。
 
