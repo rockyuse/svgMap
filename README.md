@@ -2,8 +2,6 @@
 svgMap是一个基于Raphael的svg地图组件，可以兼容ie6+现代浏览器，在api的设置上比较简单，目的就是要做一款比较小巧的组件，同时又能满足基本的地图展示需求，在加载速度和性能上都不比Canvas地图差。
 所以广泛适用于基本的地图数据展示页面。
 
-对外公布的版本并没有把所有功能展示出来，[完整版](#完整版的附加功能)会有很多扩展功能，如果需要完整版请[联系我](#联系我)。
-
 ##  文档与示例
 
 [Demo](http://rockyuse.github.io/widget/svgmap/svgmap.html)
@@ -48,9 +46,3 @@ v1.0.0
 
 8. 图片转换
 ![demo](https://raw.githubusercontent.com/rockyuse/svgMap/master/screenshot/demo6.jpg)
-
-## 联系我：
-
-QQ:     296456018
-    
-mail:   rockyuse@163.com
